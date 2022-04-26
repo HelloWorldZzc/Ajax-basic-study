@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #result {
+        width: 200px;
+        height: 100px;
+        border: solid 1px #90b;
+    }
+</style>
+
+<body>
+    <button>发送请求</button>
+    <div id="result"></div>
+</body>
+<script>
+    const btn = document.getElementsByTagName("button")[0]
+    const result = document.getElementById("result")
+    btn.onclick = function () {
+        //1、创建对象
+        const xhr = new XMLHttpRequest()
+        //2、设置请求方式和请求地址 初始化操作
+        xhr.open("GET", "http://127.0.0.1:3000/serve?a=1&b=2")
+        //3、发送请求
+        xhr.send();
+        //4、事件绑定 处理服务端返回的结果
+        // on  when 当....时候 readystate 是 xhr 对象中的属性, 表示状态 0 1 2 3 4
+        //0 未初始化 1 open已经调用完毕 2 send已经调用完毕 3 服务器端返回了部分结果 4 服务器端返回了全部结果 
+        xhr.onreadystatechange = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                //处理结果 行 头 空行 体
+                console.log(xhr.status)
+                console.log(xhr.statusText)
+                console.log(xhr.response)
+                console.log(xhr.getAllResponseHeaders())
+                result.innerHTML = xhr.response
+            }
+        }
+    }
+</script>
+
+</html>
+
+<!-- //服务器代码
+    // 1、引入express
+const express = require('express');
+// 2、创建应用的对象
+const app = express();
+// 3、设置路由 req：对请求报文的封装，res：对响应报文的封装
+app.get('/serve', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send('Hello World');
+});
+// 4、监听端口
+app.listen(3000, () => {
+    console.log('Example app listening on port 3000!');
+});
+
+ -->

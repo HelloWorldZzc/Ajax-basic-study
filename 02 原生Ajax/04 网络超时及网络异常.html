@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>请求超时与网络异常</title>
+    <style>
+        #result {
+            width: 200px;
+            height: 100px;
+            border: solid 1px #90b;
+        }
+    </style>
+</head>
+
+<body>
+    <button>点击发送请求</button>
+    <div id="result"></div>
+    <script>
+        const btn = document.getElementsByTagName('button')[0];
+        const result = document.querySelector('#result');
+        btn.addEventListener('click', function () {
+            const xhr = new XMLHttpRequest();
+            //超时设置 2s 设置
+            xhr.timeout = 2000;
+            //超时回调
+            xhr.ontimeout = function () {
+                alert("网络超时, 请稍后重试!!");
+            }
+            //网络异常回调
+            xhr.onerror = function () {
+                alert("你的网络似乎出了一些问题!");
+            }
+            xhr.open("GET", 'http://127.0.0.1:3000/timeout');
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        result.innerHTML = xhr.response;
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+<!-- 
+    // 1、引入express
+const express = require('express');
+// 2、创建应用的对象
+const app = express();
+// 3、设置路由 req：对请求报文的封装，res：对响应报文的封装
+app.get('/serve', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send('Hello World get');
+});
+app.all('/serve', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.send('Hello World post');
+});
+// JSON案例
+app.all('/json-server', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    const data = {
+        name: 'atguigu',
+        age: 10
+    };
+    //对对象进行字符串转换
+    let str = JSON.stringify(data);
+    //设置响应体
+    res.send(str);
+});
+// 超时案例
+app.all('/timeout', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    setTimeout(() => {
+        res.send('Hello World timeout');
+    }, 3000);
+});
+// 4、监听端口
+app.listen(3000, () => {
+    console.log('Example app listening on port 3000!');
+});
+
+ -->

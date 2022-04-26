@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #result {
+        width: 200px;
+        height: 100px;
+        border: solid 1px #903;
+    }
+</style>
+
+<body>
+    <div id="result"></div>
+</body>
+<script>
+    const result = document.getElementById("result");
+    result.addEventListener("mouseover", function () {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:3000/serve");
+        //设置请求头 预定义的头
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // 设置自定义的请求头 需要有all
+        xhr.setRequestHeader('name', 'zhangsan');
+        xhr.send("a:100&b:200");//什么形式都可以，但是服务器要有对应的解码形式
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    result.innerHTML = xhr.response;
+                }
+            }
+        }
+
+    });
+</script>
+
+</html>
+
+<!-- 
+    // 1、引入express
+const express = require('express');
+// 2、创建应用的对象
+const app = express();
+// 3、使用了自定义的请求头
+app.all('/serve', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.send('Hello World post');
+});
+// 4、监听端口
+app.listen(3000, () => {
+    console.log('Example app listening on port 3000!');
+});
+
+ -->
