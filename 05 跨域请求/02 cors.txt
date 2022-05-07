@@ -1,0 +1,11 @@
+app.all('/cors-server', (request, response)=>{
+    //设置响应头
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Headers", '*');
+    response.setHeader("Access-Control-Allow-Method", '*');
+    // response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    response.send('hello CORS');
+});
+
+在服务端设置好，直接能够使用的
+在第一次解决跨域请求的时候。使用到的方法
